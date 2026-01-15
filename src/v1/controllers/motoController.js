@@ -1,4 +1,5 @@
 const Moto = require('../models/motoModel');
+const User = require("../models/userModel");
 
 exports.getAllMotos = async (req, res) => {
     try {
@@ -20,6 +21,23 @@ exports.getAllMotos = async (req, res) => {
             total_pages: Math.ceil(total / limit),
             data: rows
         });
+    } catch (error) {
+        res.status(500).json({ status: "error", message: error.message });
+    }
+};
+
+
+exports.getMotoById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const moto = await Moto.findById(id);
+
+        if (!moto) {
+            return res.status(404).json({ message: "Utilisateur non trouvé" });
+        }
+
+        res.json({ status: "success", data: moto });
     } catch (error) {
         res.status(500).json({ status: "error", message: error.message });
     }

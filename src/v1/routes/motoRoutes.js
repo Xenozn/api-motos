@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const motoController = require('../controllers/motoController');
+const authMiddleware = require("../../middlewares/authMiddleware");
+const {isAdmin} = require("../../middlewares/roleMiddleware");
+const userController = require("../controllers/userController");
 
 /**
  * @swagger
@@ -61,5 +64,31 @@ const motoController = require('../controllers/motoController');
  *         description: Erreur serveur
  */
 router.get('/', motoController.getAllMotos);
+
+/**
+ * @swagger
+ * /api/v1/motos/{id}:
+ *   get:
+ *     summary: Récupérer une moto par ID
+ *     tags: [Motos]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Moto trouvé
+ *       401:
+ *         description: Non authentifié
+ *       403:
+ *         description: Accès refusé
+ *       404:
+ *         description: Utilisateur non trouvé
+ */
+router.get('/:id',authMiddleware, motoController.getMotoById);
 
 module.exports = router;
