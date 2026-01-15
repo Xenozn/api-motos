@@ -6,15 +6,28 @@ exports.getAllReviews = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
     const search = req.query.search || '';
+    const id_moto = req.query.motoId || null;
+    const id_user_filter = req.query.userId || null; // Récupère ?userId=10
 
     const [rows, total] = await Promise.all([
-      Review.findAllPaging({ limit, offset, search }),
-      Review.countAll({ search })
+      Review.findAllPaging({ limit, offset, search, id_moto, id_user_filter }),
+      Review.countAll({ search, id_moto, id_user_filter })
     ]);
+
+    // Message personnalisé si aucun avis trouvé pour un utilisateur précis
+    if (id_user_filter && rows.length === 0) {
+      return res.status(200).json({
+        status: "success",
+        message: "Cet utilisateur n'a rédigé aucun avis",
+        total_records: 0,
+        data: []
+      });
+    }
 
     res.status(200).json({
       status: "success",
       total_records: total,
+      current_page: page,
       data: rows
     });
   } catch (error) {
@@ -34,27 +47,30 @@ exports.getReviewById = async (req, res) => {
     res.status(500).json({ status: "error", message: error.message });
   }
 };
-
 exports.createReview = async (req, res) => {
   try {
-    const { comment } = req.body;
+    const { comment, id_moto } = req.body; // Récupère id_moto
     const id_user = req.userId;
 
-    if (!comment) {
-      return res.status(400).json({ status: "error", message: "Le commentaire est requis" });
+    if (!comment || !id_moto) {
+      return res.status(400).json({
+        status: "error",
+        message: "Le commentaire et l'id_moto sont requis"
+      });
     }
 
-    const reviewId = await Review.create({ comment, id_user });
+    const reviewId = await Review.create({ comment, id_user, id_moto });
 
     res.status(201).json({
       status: "success",
       message: "Avis ajouté !",
-      data: { id: reviewId, comment, id_user }
+      data: { id: reviewId, comment, id_user, id_moto }
     });
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });
   }
 };
+
 exports.deleteReview = async (req, res) => {
   const { id } = req.params;
   const userId = req.userId;

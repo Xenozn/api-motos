@@ -71,8 +71,13 @@ versions.forEach(version => {
     }
 });
 
+const uiOptions = {
+    swaggerOptions: {
+        persistAuthorization: true,
+    },
+};
 
 // --- DOCS ---
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, uiOptions));
 
 module.exports = app;
