@@ -4,7 +4,7 @@ exports.getAllMotos = async (req, res) => {
     try {
         const { marque, minCylindree, maxCylindree, search, sortBy, order } = req.query;
         const page = Number.parseInt(req.query.page) || 1;
-        const limit = pNumber.arseInt(req.query.limit) || 10;
+        const limit = Number.parseInt(req.query.limit) || 10;
         const offset = (page - 1) * limit;
 
         // On récupère les motos et le total en parallèle
