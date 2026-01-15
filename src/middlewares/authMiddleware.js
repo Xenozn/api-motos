@@ -17,10 +17,9 @@ const authMiddleware = (req, res, next) => {
 
         next();
     } catch (error) {
-        console.error('JWT error details:', error); // Regarde si c'est "invalid signature" ou "jwt expired"
+        console.error('JWT error details:', error);
         return res.status(401).json({
             message: "Token invalide",
-            debug: error.message // À retirer en production !
         });
     }
 };

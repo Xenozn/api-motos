@@ -9,8 +9,10 @@ const userController = require("../controllers/userController");
  * @swagger
  * /api/v1/motos:
  *   get:
- *     summary: Récupérer la liste des motos avec pagination
+ *     summary: Récupérer la liste des motos avec pagination et filtres
  *     tags: [Motos]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: page
@@ -24,6 +26,30 @@ const userController = require("../controllers/userController");
  *           type: integer
  *           example: 10
  *         description: Nombre d’éléments par page
+ *       - in: query
+ *         name: marque
+ *         schema:
+ *           type: string
+ *           example: Yamaha
+ *         description: Filtrer par nom de marque
+ *       - in: query
+ *         name: minCylindree
+ *         schema:
+ *           type: integer
+ *           example: 500
+ *         description: Cylindrée minimale
+ *       - in: query
+ *         name: maxCylindree
+ *         schema:
+ *           type: integer
+ *           example: 1000
+ *         description: Cylindrée maximale
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *           example: MT
+ *         description: Recherche partielle sur le modèle
  *     responses:
  *       200:
  *         description: Liste paginée des motos
@@ -35,18 +61,12 @@ const userController = require("../controllers/userController");
  *                 status:
  *                   type: string
  *                   example: success
- *                 results:
- *                   type: integer
- *                   example: 10
  *                 total_records:
  *                   type: integer
  *                   example: 100
  *                 current_page:
  *                   type: integer
  *                   example: 1
- *                 total_pages:
- *                   type: integer
- *                   example: 10
  *                 data:
  *                   type: array
  *                   items:
@@ -54,16 +74,28 @@ const userController = require("../controllers/userController");
  *                     properties:
  *                       id:
  *                         type: integer
- *                       marque:
- *                         type: string
+ *                         example: 1
  *                       modele:
  *                         type: string
+ *                         example: MT-07
  *                       cylindree:
  *                         type: integer
+ *                         example: 689
+ *                       brand:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: integer
+ *                             example: 2
+ *                           name:
+ *                             type: string
+ *                             example: Yamaha
+ *       401:
+ *         description: Non authentifié
  *       500:
  *         description: Erreur serveur
  */
-router.get('/', motoController.getAllMotos);
+router.get('/', authMiddleware, motoController.getAllMotos);
 
 /**
  * @swagger
