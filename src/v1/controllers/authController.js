@@ -59,6 +59,8 @@ exports.login = async (req, res) => {
         // On retire le password de l'objet renvoyé
         const { password: _, ...userWithoutPassword } = user;
 
+
+
         res.json({
             message: "Connecté !",
             token,
