@@ -16,7 +16,6 @@ const authMiddleware = require("../../middlewares/authMiddleware");
  *       '500':
  *         description: Erreur serveur
  */
-
 /**
  * @swagger
  * /api/v1/reviews:
@@ -38,6 +37,18 @@ const authMiddleware = require("../../middlewares/authMiddleware");
  *           type: integer
  *           example: 10
  *         description: Nombre d’éléments par page
+ *       - in: query
+ *         name: motoId
+ *         schema:
+ *           type: integer
+ *           example:
+ *         description: Id de la moto
+ *       - in: query
+ *         name: userId
+ *         schema:
+ *           type: integer
+ *           example:
+ *         description: Id de l'utilisateur
  *     responses:
  *       200:
  *         description: Liste paginée des reviews
@@ -62,10 +73,39 @@ const authMiddleware = require("../../middlewares/authMiddleware");
  *                     properties:
  *                       id:
  *                         type: integer
- *                         example: 1
- *                       description:
+ *                         example: 3
+ *                       comment:
  *                         type: string
- *                         example: Description
+ *                         description: Commentaire de l'utilisateur
+ *                         example: "Super service !"
+ *                       id_user:
+ *                         type: integer
+ *                         example: 1
+ *                       created_at:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2026-01-15T18:11:48.000Z"
+ *                       moto:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: integer
+ *                             example: 1
+ *                           modele:
+ *                             type: string
+ *                             example: "MT-07"
+ *                           cylindree:
+ *                             type: integer
+ *                             example: 689
+ *                           brand:
+ *                             type: object
+ *                             properties:
+ *                               id:
+ *                                 type: integer
+ *                                 example: 1
+ *                               name:
+ *                                 type: string
+ *                                 example: "Yamaha"
  *       401:
  *         description: Non authentifié
  *       500:
@@ -99,7 +139,6 @@ const authMiddleware = require("../../middlewares/authMiddleware");
 router.get('/', authMiddleware, reviewController.getAllReviews);
 router.get('/:id', authMiddleware, reviewController.getReviewById);
 
-
 /**
  * @swagger
  * components:
@@ -108,17 +147,20 @@ router.get('/:id', authMiddleware, reviewController.getReviewById);
  *       type: object
  *       required:
  *         - comment
+ *         - id_moto
  *       properties:
  *         comment:
  *           type: string
  *           example: "Super service !"
+ *         id_moto:
+ *           type: integer
+ *           example: 10
  *   securitySchemes:
  *     bearerAuth:
  *       type: http
  *       scheme: bearer
  *       bearerFormat: JWT
  */
-
 
 /**
  * @swagger
