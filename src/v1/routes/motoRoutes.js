@@ -5,6 +5,11 @@ const authMiddleware = require("../../middlewares/authMiddleware");
 const {isAdmin} = require("../../middlewares/roleMiddleware");
 const userController = require("../controllers/userController");
 
+
+
+
+
+
 /**
  * @swagger
  * /api/v1/motos:

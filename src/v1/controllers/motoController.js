@@ -35,7 +35,7 @@ exports.getAllMotos = async (req, res) => {
     }
 };
 
-exports.getMotoById = async (req, res) => {
+exports.getMotoById  = async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -47,3 +47,5 @@ exports.getMotoById = async (req, res) => {
         res.status(500).json({ status: "error", message: error.message });
     }
 };
+
+
